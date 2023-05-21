@@ -39,7 +39,7 @@ const Coffee = () => {
 
     return (
         <Layout>
-            <Content style={contentStyle}>
+            {/* <Content style={contentStyle}>
                 <Title level={3} style={textStyle}>如果你觉得这款工具对你有所帮助，可以请作者喝杯咖啡提提神吗😄</Title>
                 <div style={textStyle}>
                     <Space>
@@ -50,7 +50,7 @@ const Coffee = () => {
                 <div style={qrCodeStyle}>
                     <QRCode value={ethAddress}/>
                 </div>
-            </Content>
+            </Content> */}
         </Layout>
     );
 }

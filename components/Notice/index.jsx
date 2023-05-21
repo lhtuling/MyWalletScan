@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 const Notice = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     useEffect(() => {
-        setModalIsOpen(true);
+        setModalIsOpen(false);
     }, []);
     return (
         <div>

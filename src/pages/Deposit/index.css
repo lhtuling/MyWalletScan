@@ -1,3 +1,11 @@
 .centered-table .ant-table-cell {
     text-align: center;
 }
+
+.bAddress {
+    color: red;
+    /* 加粗倾斜 发黄色光 */
+    font-weight: bold;
+    font-style: italic;
+    text-shadow: 0 0 10px #FF0000;
+}

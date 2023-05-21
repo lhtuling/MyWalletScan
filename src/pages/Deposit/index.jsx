@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {Table, Button, Input, Modal, Form, Popconfirm, Space, Spin, Checkbox, Tag} from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Button, Input, Modal, Form, Popconfirm, Space, Spin, Checkbox, Tag } from 'antd';
 import './index.css'
-import {CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 const Deposit = () => {
     const [data, setData] = useState([]);
@@ -9,7 +9,7 @@ const Deposit = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
-    const [isPaginated, setIsPaginated] = useState(true);
+    const [isPaginated, setIsPaginated] = useState(false);
     const [searchText, setSearchText] = useState("");
     const isEditing = (record) => record.key === editingKey;
     const onPaginationChange = (e) => {
@@ -30,7 +30,7 @@ const Deposit = () => {
         localStorage.setItem('depositData', JSON.stringify(data));
     }, [data]);
     const edit = (record) => {
-        form.setFieldsValue({...record});
+        form.setFieldsValue({ ...record });
         setEditingKey(record.key);
     };
 
@@ -42,7 +42,7 @@ const Deposit = () => {
 
             if (index > -1) {
                 const item = newData[index];
-                newData.splice(index, 1, {...item, ...row});
+                newData.splice(index, 1, { ...item, ...row });
                 setData(newData);
                 setEditingKey('');
             } else {
@@ -58,7 +58,7 @@ const Deposit = () => {
 
     const addRecord = () => {
         form.validateFields().then((values) => {
-            const newData = [...data, {key: Date.now().toString(), ...values}];
+            const newData = [...data, { key: Date.now().toString(), ...values }];
             setData(newData);
             setIsModalVisible(false);
             form.resetFields();
@@ -90,23 +90,34 @@ const Deposit = () => {
             align: 'center',
         },
         {
+            title: '备注',
+            dataIndex: 'notes',
+            key: 'notes',
+            render: (text, record) => isEditing(record) ?
+                <Form.Item name="notes" style={{ margin: 0 }}>
+                    <Input defaultValue={text} onChange={(e) => form.setFieldsValue({ notes: e.target.value })} />
+                </Form.Item> : text,
+            align: 'center'
+        },
+        {
             title: '个人地址',
             dataIndex: 'aAddress',
             key: 'aAddress',
             render: (text, record) => isEditing(record) ?
-                <Form.Item name="aAddress" style={{margin: 0}}>
-                    <Input defaultValue={text} onChange={(e) => form.setFieldsValue({aAddress: e.target.value})}/>
+                <Form.Item name="aAddress" style={{ margin: 0 }}>
+                    <Input defaultValue={text} onChange={(e) => form.setFieldsValue({ aAddress: e.target.value })} />
                 </Form.Item> : text,
             align: 'center',
             width: 500
         },
         {
-            title: '交易所地址',
+            title: '交易所地址（提币地址）',
             dataIndex: 'bAddress',
             key: 'bAddress',
+            className: 'bAddress',
             render: (text, record) => isEditing(record) ?
-                <Form.Item name="bAddress" style={{margin: 0}}>
-                    <Input defaultValue={text} onChange={(e) => form.setFieldsValue({bAddress: e.target.value})}/>
+                <Form.Item name="bAddress" style={{ margin: 0 }}>
+                    <Input defaultValue={text} onChange={(e) => form.setFieldsValue({ bAddress: e.target.value })} />
                 </Form.Item> : text,
             align: 'center',
             width: 500
@@ -116,18 +127,8 @@ const Deposit = () => {
             dataIndex: 'exchangeName',
             key: 'exchangeName',
             render: (text, record) => isEditing(record) ?
-                <Form.Item name="exchangeName" style={{margin: 0}}>
-                    <Input defaultValue={text} onChange={(e) => form.setFieldsValue({exchangeName: e.target.value})}/>
-                </Form.Item> : text,
-            align: 'center'
-        },
-        {
-            title: '备注',
-            dataIndex: 'notes',
-            key: 'notes',
-            render: (text, record) => isEditing(record) ?
-                <Form.Item name="notes" style={{margin: 0}}>
-                    <Input defaultValue={text} onChange={(e) => form.setFieldsValue({notes: e.target.value})}/>
+                <Form.Item name="exchangeName" style={{ margin: 0 }}>
+                    <Input defaultValue={text} onChange={(e) => form.setFieldsValue({ exchangeName: e.target.value })} />
                 </Form.Item> : text,
             align: 'center'
         },
@@ -141,9 +142,9 @@ const Deposit = () => {
                         <Button
                             type={"primary"}
                             onClick={() => save(record)}
-                            icon={<CheckOutlined/>}
+                            icon={<CheckOutlined />}
                         />
-                        <Button onClick={cancel} icon={<CloseOutlined/>}/>
+                        <Button onClick={cancel} icon={<CloseOutlined />} />
                     </Space>
                 ) : (
                     <Space>
@@ -151,10 +152,10 @@ const Deposit = () => {
                             type={"primary"}
                             disabled={editingKey !== ''}
                             onClick={() => edit(record)}
-                            icon={<EditOutlined/>}
+                            icon={<EditOutlined />}
                         />
                         <Popconfirm title={`确定删除吗?`} onConfirm={() => deleteRecord(record)}>
-                            <Button icon={<DeleteOutlined/>}/>
+                            <Button icon={<DeleteOutlined />} />
                         </Popconfirm>
                     </Space>
                 );
@@ -164,9 +165,9 @@ const Deposit = () => {
     ];
     return (
         <>
-            <Space style={{marginBottom: 10}}>
+            <Space style={{ marginBottom: 10 }}>
                 <Button type="primary" onClick={() => setIsModalVisible(true)}
-                        icon={<PlusOutlined/>} shape="round"/>
+                    icon={<PlusOutlined />} shape="round" />
                 <Checkbox onChange={onPaginationChange} checked={isPaginated}>是否分页</Checkbox>
                 <Tag color="magenta">当前共有{data.length}条记录</Tag>
                 <Tag color="magenta">方便管理个人地址和交易所充值地址，做到一一对应，防止女巫</Tag>
@@ -177,32 +178,33 @@ const Deposit = () => {
                 placeholder="搜索地址"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                style={{marginBottom: 10}}
+                style={{ marginBottom: 10 }}
             />
             <Modal title="添加记录" open={isModalVisible} onOk={addRecord} onCancel={() => setIsModalVisible(false)}>
                 <Form form={form} layout="vertical">
-                    <Form.Item label="个人地址" name="aAddress" rules={[{required: true, message: '请输入个人地址'}]}>
-                        <Input/>
+                    <Form.Item label="个人地址" name="aAddress" rules={[{ required: true, message: '请输入个人地址' }]}>
+                        <Input />
                     </Form.Item>
-                    <Form.Item label="交易所地址" name="bAddress"
-                               rules={[{required: true, message: '请输入交易所地址'}]}>
-                        <Input/>
+                    <Form.Item label="交易所地址（提币地址）" name="bAddress"
+                        rules={[{ required: true, message: '请输入交易所地址' }]}>
+                        <Input />
                     </Form.Item>
                     <Form.Item label="交易所名称" name="exchangeName">
-                        <Input/>
+                        <Input />
                     </Form.Item>
                     <Form.Item label="备注" name="notes">
-                        <Input/>
+                        <Input />
                     </Form.Item>
                 </Form>
             </Modal>
             <Spin spinning={loading}>
                 <Table
+                    size={"small"}
                     bordered
                     columns={columns}
                     dataSource={filteredData}
-                    className="centered-table"
-                    pagination={isPaginated ? {defaultPageSize: 10} : false}
+                    className="centered-table table-small-font"
+                    pagination={isPaginated ? { defaultPageSize: 10 } : false}
                 />
             </Spin>
         </>
