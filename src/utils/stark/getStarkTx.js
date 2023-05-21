@@ -42,6 +42,27 @@ async function getStarkTx(address) {
         if (month < 10) month = '0' + month;
         if (date < 10) date = '0' + date;
         let formattedDate = `${year}/${month}/${date}`;
+        
+        debugger;
+
+        const offset = 8;
+        const utc8Date = new Date(latestDate.getTime() + offset * 3600 * 1000);
+        const now = new Date();
+        const utc8Now = new Date(now.getTime() + offset * 3600 * 1000);
+        const diff = utc8Now - utc8Date;
+        const diffInHours = Math.floor(diff / (1000 * 60 * 60));
+        const diffInDays = Math.floor(diffInHours / 24);
+        var fDate = "";
+        if (diffInDays > 0) {
+        fDate = `${diffInDays} 天前`;
+        } else if (diffInHours > 0) {
+        fDate = `${diffInHours} 小时前`;
+        } else {
+        fDate = "刚刚";
+        }
+
+        formattedDate = fDate;
+        
         if (hasNextPage === true) {
             endCursor = response.data.data['transactions']['pageInfo']['endCursor'];
             while (hasNextPage) {
